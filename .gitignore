@@ -39,3 +39,9 @@ doc/paper-jss/reprex-V2/*
 data/ne_10*
 doc/jss-accepted-version/tex/Code.zip
 doc/jss-accepted-version/tex/Figures.zip
+doc/jss-production/v115i02.bbl
+doc/jss-production/v115i02.blg
+doc/jss-production/v115i02.fdb_latexmk
+doc/jss-production/v115i02.fls
+doc/jss-production/v115i02.out
+doc/jss-production/v115i02.synctex.gz
