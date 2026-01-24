@@ -73,7 +73,7 @@
 
 Data are often collected at particular locations in space or at spatial locations over time.
 While such data are a rich source of information across many fields,
-they are challenging to properly model -- data closer in space and time are usually more similar to each other than data farther apart due to measured and unmeasured variables \citep{cressie1993, diggle2007, cressie2011}.
+they are challenging to properly model --- data closer in space and time are usually more similar to each other than data farther apart due to measured and unmeasured variables \citep{cressie1993, diggle2007, cressie2011}.
 While measured variables can be accounted for with predictors in a model (e.g., measuring and modeling temperature effects on species abundance), unmeasured variables can cause residual spatial correlation.
 Accounting for this residual correlation is important because doing so allows for valid statistical inference \citep{legendre1989a, dormann2007}, can improve predictions \citep[e.g.,][]{shelton2014}, and can provide useful spatial summary statistics \citep[e.g.,][]{thorson2019d, barnett2021}.
 
@@ -90,7 +90,7 @@ This SPDE method approximates a Matérn correlation function as arising mechanis
 
 Software packages designed for specifying statistical models that incorporate the SPDE, such as \proglang{R}-\pkg{INLA} and \pkg{TMB}, are flexible and powerful but can be challenging for many applied researchers.
 For example, \pkg{TMB} requires the user to program in a \proglang{C++} template, and it can be slow to experiment with multiple models when writing bespoke model code.
-While packages such as \pkg{lme4} \citep{bates2015} and \pkg{glmmTMB} \citep{brooks2017} let users quickly iterate and explore statistical models -- focusing on evaluating fit and comparing models -- they lack built-in SPDE or spatiotemporal functionality.
+While packages such as \pkg{lme4} \citep{bates2015} and \pkg{glmmTMB} \citep{brooks2017} let users quickly iterate and explore statistical models --- focusing on evaluating fit and comparing models --- they lack built-in SPDE or spatiotemporal functionality.
 Packages such as \pkg{VAST} \citep{thorson2019}, \pkg{tinyVAST} \citep{thorson2024tinyvast}, and \pkg{inlabru} \citep{bachl2019} are powerful user interfaces to fit spatial models that use the SPDE, but they lack a modular interface familiar to those who have used \pkg{lme4} or \pkg{glmmTMB}, lack some functionality, or may be challenging to learn for some users.
 
 Here, we introduce the \proglang{R} package \pkg{sdmTMB}, which implements geostatistical spatial and spatiotemporal GLMMs using \pkg{TMB} for model fitting and \pkg{fmesher} or \proglang{R}-\pkg{INLA} to set up SPDE matrices.
@@ -145,7 +145,7 @@ If we define $\lVert \bm{h} \rVert$ as the Euclidean distance between spatial po
 The parameter $\sigma_m^2$ is the marginal variance (magnitude of the random field ``wiggles''), $\Gamma$ represents the Gamma function, $K_\nu$ represents the modified Bessel function of the second kind, and $\kappa$ represents the spatial decorrelation rate.
 The parameter $\nu$ controls the smoothness of the covariance function.
 In practice, $\nu$ is challenging to estimate and is fixed here at $\nu = 1$ \citep{lindgren2011}.
-A more interpretable derived parameter than the spatial decorrelation rate $\kappa$ is the spatial range -- the distance at which two points are effectively independent.
+A more interpretable derived parameter than the spatial decorrelation rate $\kappa$ is the spatial range --- the distance at which two points are effectively independent.
 A common definition is $\sqrt{8 \nu} / \kappa$ (so if $\nu = 1$, $\mathrm{range} = \sqrt{8} / \kappa$), which corresponds to the distance at which correlation decays to $\approx 0.13$ \citep{lindgren2011} (Figure~\ref{fig:matern-range}c).
 
 \subsection{Geometric anisotropy}
@@ -328,7 +328,7 @@ The objective function returns the marginal log likelihood and its gradient, int
 The negative marginal log likelihood is minimized via the non-linear optimization routine \fct{stats::nlminb} \citep{gay1990} in \proglang{R}, with optional additional Newton-Raphson iterations (one by default) using the Hessian computed via \fct{stats::optimHess} \citep{r2024}.
 Random effects are returned at values that maximize the likelihood conditional on the fixed effects at their maximum marginal likelihood (i.e., plug-in or empirical Bayes estimates); however,
 it is also possible to apply an ``epsilon'' estimator \citep{thorson2016bias}, which corrects for bias arising from the variance and skewness of random effects when calculating an estimator as a non-linear transformation of random effects (see Section \ref{index-bias-correct} for an example).
-Standard errors on all parameters and derived quantities -- including those involving random effects -- are calculated using the generalized delta method \citep{kristensen2016, zheng2021}.
+Standard errors on all parameters and derived quantities --- including those involving random effects --- are calculated using the generalized delta method \citep{kristensen2016, zheng2021}.
 After rapid model exploration with maximum likelihood, one can optionally pass an \pkg{sdmTMB} model to the \proglang{R} package \pkg{rstan} \citep{carpenter2017, rstan} via \pkg{tmbstan} \citep{monnahan2018} to sample from the joint posterior distribution for Bayesian inference.
 
 A fitted model summary can be viewed with \fct{print} or \fct{summary} and a set of basic ``sanity'' checks can be run with \fct{sanity}.
@@ -716,7 +716,7 @@ Here, we will predict on a 2 \(\times\) 2 km grid (\code{qcs\_grid}) that covers
 The grid contains spatial covariate columns and all predictors used in the model set to values for which we want to predict.
 Some covariates might be fixed at a specified value for all predictions, such that we are predicting the expected value for samples conditional on those specified values.
 In the context of fish or animal surveys, these are sometimes called \emph{detectability} or \emph{catchability} covariates, given the model is predicting the target variable while controlling for the additional influence of these covariates \citep{thorson2019}.
-The output of \fct{predict} is a data frame containing overall estimates in link space (\code{est}), estimates from the non-random-field components (\code{est\_non\_rf}; here, intercept and depth), and estimates from the individual random field components (here, \code{omega\_s} -- the spatial field).
+The output of \fct{predict} is a data frame containing overall estimates in link space (\code{est}), estimates from the non-random-field components (\code{est\_non\_rf}; here, intercept and depth), and estimates from the individual random field components (here, \code{omega\_s} --- the spatial field).
 % The overall predictions combining fixed and random effects are plug-in predictions.
 We can plot these with \fct{geom\_raster} or \fct{geom\_tile}  from the \pkg{ggplot2} \citep{ggplot2} package (Figure~\ref{fig:pcod-predict-maps}).
 %
@@ -1398,7 +1398,7 @@ We ran a simple speed comparison between \pkg{sdmTMB}, \proglang{R}-\pkg{INLA}/\
 Our test was restricted to one core and default \proglang{R} algebra libraries using \proglang{R} 4.4.0 and \pkg{Matrix} version 1.7.0.
 With up to 10,000 rows of data, \pkg{sdmTMB} was fastest at approximately a three- to 13-fold speed increase over \proglang{R}-\pkg{INLA}/\pkg{inlabru} (Figure~\ref{fig:timing}a--b).
 At larger sample sizes, \pkg{inlabru} was more affected by mesh resolution than \pkg{sdmTMB} (Figure~\ref{fig:timing}c).
-\pkg{mgcv} was most affected by mesh resolution (Figure~\ref{fig:timing}) -- timing was on par or faster than the other packages at low ($\approx$~200) mesh resolutions but much slower as mesh complexity grew into commonly used ranges.
+\pkg{mgcv} was most affected by mesh resolution (Figure~\ref{fig:timing}) --- timing was on par or faster than the other packages at low ($\approx$~200) mesh resolutions but much slower as mesh complexity grew into commonly used ranges.
 The \pkg{mgcv} model was fit with the \fct{bam} function instead of the standard \fct{gam}.
 The \fct{bam}\linebreak
 function here uses numerical methods optimized for large datasets, including a discretization of covariate values \citep{wood2015, wood2017b, li2020a}.
@@ -1448,7 +1448,7 @@ Examples include spatial models of disease spread \citep{moraga2021}, spatial ec
 The \pkg{sdmTMB} model is also relevant to spatial \citep{elhorst2010, lee2010} and dynamic spatial panel data models \citep{elhorst2012} in econometrics.
 These examples underscore the versatile nature of the SPDE approach and the potential uses of \pkg{sdmTMB} across various scientific and industrial sectors.
 
-The GLMMs underpinning \pkg{sdmTMB} models are spatially explicit and derived from a mechanistic diffusion process -- they estimate interpretable parameters of a spatial covariance function: parameters defining the magnitude of spatial variation and the rate of correlation decay with distance.
+The GLMMs underpinning \pkg{sdmTMB} models are spatially explicit and derived from a mechanistic diffusion process --- they estimate interpretable parameters of a spatial covariance function: parameters defining the magnitude of spatial variation and the rate of correlation decay with distance.
 In contrast, non-parametric approaches (e.g., \pkg{randomForest}, \citealp{liaw2002}; \pkg{MaxEnt}, \citealp{phillips2006}) and most smooths in \pkg{mgcv} \citep{wood2017a} do not estimate spatial covariance functions.
 Approaches such as conditional autoregressive models (CAR) are applicable to areal data, where the spatial domain is discretized into a set of vertices or polygons.
 Data aggregated to polygon or grid level may be analyzed using other spatial models, including CAR models \citep[e.g.,][]{verhoef2018}; \pkg{sdmTMB} can also fit models with areal data if each polygon has an associated centroid.
