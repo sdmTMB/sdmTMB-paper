@@ -33,7 +33,7 @@
   We hope \pkg{sdmTMB} will help open this useful class of models to more geostatistical analysts.
 }
 
-\Keywords{Gaussian Markov random field, GLMM, SPDE, species distribution modeling, \proglang{R} package, spatiotemporal, Template Model Builder}
+\Keywords{Gaussian Markov random field, GLMM, SPDE, species distribution modeling, \proglang{R} package, spatiotemporal model, Template Model Builder}
 \Plainkeywords{Gaussian Markov random field, GLMM, SPDE, species distribution modeling, R package, spatio-temporal, Template Model Builder}
 
 \Volume{115}
@@ -129,35 +129,40 @@ constrained by some function that defines the rate at which spatial covariance d
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{matern-range-1} 
-\caption[Example Gaussian random fields for two range values]{Example Gaussian random fields for two range values. The range describes the distance at which spatial correlation decays to $\approx 0.13$ in coordinate units (i.e., the distance at which two points are effectively independent). Panel (a) shows a shorter range than panel (b), which results in a ``wigglier'' surface. Panel (c) shows the Mat\'ern function for these two range values. The dashed horizontal line shows a correlation of 0.13.}\label{fig:matern-range}
+\caption[Example Gaussian random fields for two range values]{Example Gaussian random fields for two range values. The range describes the distance at which spatial correlation decays to $\approx 0.1$ in coordinate units (i.e., the distance at which two points are effectively independent). Panel (a) shows a shorter range than panel (b), which results in a ``wigglier'' surface. Panel (c) shows the Mat\'ern function for these two range values. The dashed horizontal line shows the correlation threshold of $\approx 0.1$.}\label{fig:matern-range}
 \end{figure}
 
 \subsection{The Mat\'ern covariance function}
 
 Various covariance functions are possible, but a popular and flexible choice is the Mat\'ern \citep{whittle1954, matern1986}; see Figure~\ref{fig:matern-range}.
-If we define $\lVert \bm{h} \rVert$ as the Euclidean distance between spatial points $\bm{s}_j$ and $\bm{s}_k$, we can represent the Mat\'ern covariance $\Phi$ as
+Let $\bm{h} = \bm{s}_j - \bm{s}_k$ denote the spatial lag vector, and let $\lVert \bm{h} \rVert$ be its Euclidean norm (the distance between locations).
+We represent the Mat\'ern covariance $\Phi$ as
 \[
 \Phi\left( \bm{s}_j, \bm{s}_k \right) =
   \frac{\sigma_m^2}{2^{\nu - 1}\Gamma(\nu)}
-  \left(\kappa \lVert h \rVert \right)^\nu K_\nu
-  \left( \kappa \lVert h \rVert \right).
+  \left(\kappa \lVert \bm{h} \rVert \right)^\nu K_\nu
+  \left( \kappa \lVert \bm{h} \rVert \right).
 \]
 The parameter $\sigma_m^2$ is the marginal variance (magnitude of the random field ``wiggles''), $\Gamma$ represents the Gamma function, $K_\nu$ represents the modified Bessel function of the second kind, and $\kappa$ represents the spatial decorrelation rate.
 The parameter $\nu$ controls the smoothness of the covariance function.
 In practice, $\nu$ is challenging to estimate and is fixed here at $\nu = 1$ \citep{lindgren2011}.
-A more interpretable derived parameter than the spatial decorrelation rate $\kappa$ is the spatial range --- the distance at which two points are effectively independent.
-A common definition is $\sqrt{8 \nu} / \kappa$ (so if $\nu = 1$, $\mathrm{range} = \sqrt{8} / \kappa$), which corresponds to the distance at which correlation decays to $\approx 0.13$ \citep{lindgren2011} (Figure~\ref{fig:matern-range}c).
+A more interpretable derived parameter than the spatial decorrelation rate $\kappa$ is the spatial range --- the distance at which two points are nearly independent.
+A common definition is $\sqrt{8 \nu} / \kappa$ (so if $\nu = 1$, $\mathrm{range} = \sqrt{8} / \kappa$), which corresponds to the distance at which correlation decays to $\approx 0.1$ \citep{lindgren2011} (Figure~\ref{fig:matern-range}c).
 
 \subsection{Geometric anisotropy}
 
-The assumption that correlation decays equally in all directions can be relaxed to allow for geometric anisotropy
+The assumption that correlation decays equally in all directions can be relaxed to allow for geometric anisotropy.
+Replacing $\lVert \bm{h} \rVert$ by $\lVert \bm{H}\bm{h} \rVert$ yields
 \[
 \Phi\left( \bm{s}_j, \bm{s}_k \right) =
   \frac{\sigma_m^2}{2^{\nu - 1}\Gamma(\nu)}
   \left(\kappa \lVert \bm{H}\bm{h} \rVert \right)^\nu K_\nu
   \left( \kappa \lVert \bm{H}\bm{h} \rVert \right).
 \]
-Here, we add a linear transformation matrix $\bm{H}$ (with $\bm{h} = \bm{s}_j - \bm{s}_k$) and two estimated parameters governing the major axis direction of geometric anisotropy and the ratio of the major and minor axes \citep{haskard2007, lindgren2011, thorson2015ices}.
+Here, we introduce a linear transformation matrix $\bm{H}$ applied to the spatial lag
+$\bm{h} = \bm{s}_j - \bm{s}_k$, with two estimated parameters that describe the direction
+of anisotropy (the major axis) and the ratio of the major and minor axes
+\citep{haskard2007, lindgren2011, thorson2015ices}.
 
 \subsection{The SPDE approach}
 
@@ -175,8 +180,8 @@ The second chapter of \citet{krainski2018} provides an overview of the SPDE appr
 For a user of \pkg{sdmTMB}, the following are the important elements to understand.
 First, the SPDE approach links Gaussian random fields (GRFs) that have a Mat\'ern covariance function to Gaussian \emph{Markov} random fields (GMRFs) in such a way that a GMRF can be a good approximation to a GRF \citep{lindgren2011}.
 This means that GRF models can be computationally approximated as GMRFs.
-By working with GMRFs, one can take advantage of theory developed to estimate their sparse precision matrix efficiently \citep{rue2005gmrf, lindgren2011} and avoid the inversion of large dense matrices.
-Second, the SPDE involves piecewise linear basis functions that are defined by a triangulation over the spatial area of interest \citep{lindgren2011}.
+By working with GMRFs, one can take advantage of theory developed to estimate their sparse precision matrix efficiently \citep{rue2005gmrf, lindgren2011} and avoid inverting large dense matrices.
+Second, the SPDE approach involves piecewise linear basis functions that are defined by a triangulation over the spatial area of interest \citep{lindgren2011}.
 Commonly, this is referred to as a ``mesh''.
 The properties of this mesh (e.g., its resolution and how far it extends beyond the data) affect the accuracy and computational efficiency of the SPDE approach \citep{lindgren2011}.
 Third, working with the SPDE approach involves a precision matrix $\bm{Q}$ for the GMRF and introduces an alternative parameter $\tau$ that scales it.
@@ -185,7 +190,7 @@ The precision matrix is constructed from three sparse matrices associated with t
 \bm{Q} = \tau^2 \left(\kappa^4\bm{C} + 2\kappa^2\bm{G}_1 + \bm{G}_2 \right),
 \]
 where $\kappa$ is the Mat\'ern decorrelation rate as before.
-We can calculate the marginal variance of the Mat\'ern random field as $\sigma_m^2 = \left (4 \pi \tau^2 \kappa^2 \right)^{-1}$.
+For $\nu = 1$, the marginal variance of the Mat\'ern random field is $\sigma_m^2 = \left (4 \pi \tau^2 \kappa^2 \right)^{-1}$.
 
 \subsection{Adding spatiotemporal random fields}
 
@@ -204,22 +209,22 @@ The spatiotemporal random fields represent latent variables causing spatial corr
 
 \subsection{Additional model components}
 
-In practice, the above models can become considerably more complex by, for example, letting coefficients vary through time, letting coefficients vary through space \citep{hastie1993} as random fields, or adding random intercepts or slopes by grouping factors (Figure~\ref{fig:diagram}).
-All these components are additive in link space.
+In practice, the above models can become considerably more complex by, for example, allowing coefficients to vary through time, allowing coefficients to vary through space \citep{hastie1993}, or adding random intercepts or slopes by grouping factors (Figure~\ref{fig:diagram}).
+All these components enter additively on the linear predictor (link) scale.
 Adopting the notation ``main'' for main effects, ``tvc'' for time-varying coefficients, and ``svc'' for spatially varying coefficients, a more complex model could be written as
 \[
 \begin{aligned}
 \mu_{\bm{s},t} &=
 g^{-1} \left( \bm{X}^{\mathrm{main}}_{\bm{s},t} \bm{\beta} +
 \bm{X}^{\mathrm{tvc}}_{\bm{s},t} \bm{\gamma}_t +
-\bm{X}^{\mathrm{svc}}_{\bm{s},t} \zeta_{\bm{s}} +
+\bm{X}^{\mathrm{svc}}_{\bm{s},t} \bm{\zeta}_{\bm{s}} +
 \alpha_g +
 O_{\bm{s},t} +
 \omega_{\bm{s}} +
 \epsilon_{\bm{s},t} \right).
 \end{aligned}
 \]
-where each $\bm{X}$ represents a model matrix, $\bm{\gamma}_t$ represents a vector of coefficients that are constrained to vary through time as random walks or AR(1) processes, $\zeta_{\bm{s}}$ represents spatially varying coefficients following a random field, $\alpha_g$ represents IID random intercepts by group $g$ ($\alpha_g \sim \operatorname{Normal} \left(0, \sigma_\alpha^2 \right)$), $O_{\bm{s},t}$ represents an offset variable \citep[][p.~206]{mccullagh1989} (e.g., log sampling effort), and $\omega_{\bm{s}}$ and $\epsilon_{\bm{s},t}$ represent spatial and spatiotemporal intercept random fields as before (Figure~\ref{fig:diagram}).
+where each $\bm{X}$ represents a model matrix, $\bm{\gamma}_t$ represents a vector of coefficients that are constrained to vary through time as random walks or AR(1) processes, $\bm{\zeta}_{\bm{s}}$ represents a vector of spatially varying coefficients that follow a random field, $\alpha_g$ represents IID random intercepts by group $g$ ($\alpha_g \sim \operatorname{Normal} \left(0, \sigma_\alpha^2 \right)$), $O_{\bm{s},t}$ represents an offset variable \citep[][p.~206]{mccullagh1989} (e.g., log sampling effort), and $\omega_{\bm{s}}$ and $\epsilon_{\bm{s},t}$ represent spatial and spatiotemporal intercept random fields as before (Figure~\ref{fig:diagram}).
 We demonstrate these model components in Sections~\ref{pcod}, \ref{dogfish}, and \ref{svc-owls}.
 
 \begin{figure}[t!]
@@ -350,7 +355,7 @@ and whether to use MCMC samples from a \pkg{tmbstan} model fit (\code{mcmc\_samp
 A variety of model evaluation tools are available.
 A \fct{residuals} method calculates various types of residuals.
 The default is a form of randomized quantile \citep{dunn1996} or probability integral transform \citep{smith1985} residuals.
-New observations can be simulated from a fitted model with \fct{simulate} or new data can be simulated without a fitted model (``de novo'') with \fct{sdmTMB\_simulate}.
+New observations can be simulated from a fitted model with \fct{simulate} or data can be simulated from scratch (without fitting a model) with \fct{simulate\_new}.
 \fct{sdmTMB\_cv} facilitates cross-validation.
 
 \pkg{sdmTMB} models can include penalized likelihoods by assigning priors (penalties) to model parameters through the \fct{sdmTMB} \code{prior} argument (\code{?sdmTMBpriors}).
@@ -1530,7 +1535,7 @@ R> n_obs <- 1000
 R> predictor_dat <- data.frame(X = runif(n_obs), Y = runif(n_obs),
 +    a1 = rnorm(n_obs))
 R> mesh_sdmTMB <- make_mesh(predictor_dat, xy_cols = c("X", "Y"), mesh = mesh)
-R> sim_dat <- sdmTMB_simulate(formula = ~ 1 + a1, data = predictor_dat,
+R> sim_dat <- simulate_new(formula = ~ 1 + a1, data = predictor_dat,
 +    mesh = mesh_sdmTMB, family = gaussian(),
 +    range = 0.5, phi = 0.3, sigma_O = 0.2, B = c(0.2, -0.4))
 \end{Sinput}
