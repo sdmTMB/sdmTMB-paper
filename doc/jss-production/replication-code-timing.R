@@ -27,6 +27,12 @@ is_optimized <- function() {
 if (!optimized_blas) {
   warning("Detected a non-optimized BLAS library. We recommend installing an optimized BLAS library for considerably faster fitting of TMB/sdmTMB models. There are additional details in the 'Installation' section of the sdmTMB README.md file. https://github.com/sdmTMB/sdmtmb?tab=readme-ov-file#installation")
 }
+if (packageVersion("sdmTMB") < "0.8.0") {
+  stop("Please install a version of sdmTMB >= 0.8.0.", call. = FALSE)
+}
+if (packageVersion("sdmTMB") < "1.0.0") {
+  simulate_new <- sdmTMB::sdmTMB_simulate
+}
 
 # Set INLA to use 1 thread to match other package defaults:
 INLA::inla.setOption(num.threads = "1:1")
@@ -164,7 +170,7 @@ simulate_dat <- function(n_obs = 100,
   )
 
   mesh <- make_mesh(predictor_dat, xy_cols = c("X", "Y"), mesh = me)
-  sim_dat <- sdmTMB_simulate(
+  sim_dat <- simulate_new(
     formula = ~ 1 + a1,
     data = predictor_dat,
     mesh = mesh,
