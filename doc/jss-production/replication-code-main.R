@@ -19,8 +19,11 @@ if (!optimized_blas) {
 }
 
 ## ----check-version, echo=FALSE, cache=FALSE, eval=TRUE--------------------
-if (packageVersion("sdmTMB") < "0.6.0") {
-  stop("Please install a version of sdmTMB >= 0.6.0.", call. = FALSE)
+if (packageVersion("sdmTMB") < "0.8.0") {
+  stop("Please install a version of sdmTMB >= 0.8.0.", call. = FALSE)
+}
+if (packageVersion("sdmTMB") < "1.0.0") {
+  simulate_new <- sdmTMB::sdmTMB_simulate
 }
 
 
@@ -31,7 +34,7 @@ predictor_dat <- expand.grid(
   year = seq_len(6)
 )
 sim_mesh <- make_mesh(predictor_dat, xy_cols = c("x", "y"), cutoff = 0.01)
-s1 <- sdmTMB_simulate(
+s1 <- simulate_new(
   formula = ~1,
   data = predictor_dat,
   mesh = sim_mesh,
@@ -50,7 +53,7 @@ sim_g1 <- ggplot(s1, aes(x, y, fill = mu)) +
   ggtitle("(a) Range = 0.2") +
   labs(x = "X", y = "Y")
 
-s2 <- sdmTMB_simulate(
+s2 <- simulate_new(
   formula = ~1,
   data = predictor_dat,
   mesh = sim_mesh,
@@ -664,7 +667,7 @@ predictor_dat <- data.frame(
 )
 mesh_sdmTMB <- make_mesh(predictor_dat, xy_cols = c("X", "Y"), mesh = mesh)
 
-sim_dat <- sdmTMB_simulate(
+sim_dat <- simulate_new(
   formula = ~ 1 + a1,
   data = predictor_dat,
   mesh = mesh_sdmTMB,
