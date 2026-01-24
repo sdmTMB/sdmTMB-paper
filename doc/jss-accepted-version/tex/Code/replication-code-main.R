@@ -620,7 +620,7 @@ library("ggplot2")
 library("sdmTMB")
 library("mgcv")
 library("spaMM")
-
+library("sp")
 
 ## ----mesh-timing, echo=TRUE-----------------------------------------------
 max_edge <- 0.06
@@ -796,7 +796,6 @@ Predict.matrix.spde.smooth <- function(object, data) {
 
 
 ## ----mgcvfit-timing, echo=TRUE, eval=TRUE---------------------------------
-class(mesh) <- "inla.mesh"
 fit_bam <- bam(
   observed ~ a1 + s(X, Y,
     bs = "spde", k = mesh$n,
