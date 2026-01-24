@@ -216,7 +216,7 @@ sim_fit_time <- function(n_obs = 1000, cutoff = 0.1, iter = 1, phi = 0.3, tweedi
   dat <- s$dat
   dat_sp <- sp::SpatialPointsDataFrame(cbind(dat$X, dat$Y),
     proj4string = sp::CRS("+proj=aea +lat_0=45 +lon_0=-126 +lat_1=50 +lat_2=58.5 +x_0=1000000
-  + +y_0=0 +datum=NAD83 +units=km +no_defs"), data = dat
+  +y_0=0 +datum=NAD83 +units=km +no_defs"), data = dat
   )
   loc.bnd <- matrix(c(0, 0, 1, 0, 1, 1, 0, 1), 4, 2, byrow = TRUE)
   segm.bnd <- INLA::inla.mesh.segment(loc.bnd)
