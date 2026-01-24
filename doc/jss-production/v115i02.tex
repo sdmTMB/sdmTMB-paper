@@ -556,14 +556,15 @@ Mesh: mesh_pcod2 (isotropic covariance)
 Data: pcod
 Family: binomial(link = 'logit')
  
+Conditional model:
                      coef.est coef.se
 (Intercept)             -0.44    0.42
-poly(log(depth), 2)1   -75.72    9.30
+poly(log(depth), 2)1   -75.66    9.31
 poly(log(depth), 2)2  -109.79    9.27
 
-Matérn range: 41.43
-Spatial SD: 1.69
-ML criterion at convergence: 1034.744
+Matérn range: 41.23
+Spatial SD: 1.70
+ML criterion at convergence: 1034.493
 
 See ?tidy.sdmTMB to extract these values as a data frame.
 \end{Soutput}
@@ -584,8 +585,8 @@ R> tidy(fit_bin_rf, conf.int = TRUE)
 # A tibble: 3 x 5
   term                 estimate std.error conf.low conf.high
   <chr>                   <dbl>     <dbl>    <dbl>     <dbl>
-1 (Intercept)            -0.439     0.424    -1.27     0.393
-2 poly(log(depth), 2)1  -75.7       9.30    -94.0    -57.5  
+1 (Intercept)            -0.436     0.424    -1.27     0.394
+2 poly(log(depth), 2)1  -75.7       9.31    -93.9    -57.4  
 3 poly(log(depth), 2)2 -110.        9.27   -128.     -91.6  
 \end{Soutput}
 \begin{Sinput}
@@ -612,8 +613,8 @@ R> tidy(fit_bin_rf, effects = "ran_pars", conf.int = TRUE)
 # A tibble: 2 x 5
   term    estimate std.error conf.low conf.high
   <chr>      <dbl>     <dbl>    <dbl>     <dbl>
-1 range      41.4      9.38     26.6      64.6 
-2 sigma_O     1.69     0.233     1.29      2.22
+1 range      41.2      9.32     26.5      64.2 
+2 sigma_O     1.70     0.233     1.30      2.22
 \end{Soutput}
 \end{Schunk}
 
@@ -640,7 +641,7 @@ R> ape::Moran.I(r_bin, weight = inv_dist_matrix)$p.value
 R> ape::Moran.I(r_bin_rf, weight = inv_dist_matrix)$p.value
 \end{Sinput}
 \begin{Soutput}
-[1] 0.8817066
+[1] 0.6042307
 \end{Soutput}
 \end{Schunk}
 %
@@ -655,7 +656,7 @@ R> AIC(fit_bin_rf, fit_bin)
 \end{Sinput}
 \begin{Soutput}
            df      AIC
-fit_bin_rf  5 2079.487
+fit_bin_rf  5 2079.986
 fit_bin     3 2392.070
 \end{Soutput}
 \end{Schunk}
@@ -702,13 +703,13 @@ Indeed, the log predictive density for the left-out data is considerably higher 
 R> cv_bin_rf$sum_loglik
 \end{Sinput}
 \begin{Soutput}
-[1] -1006.435
+[1] -995.4446
 \end{Soutput}
 \begin{Sinput}
 R> cv_bin$sum_loglik
 \end{Sinput}
 \begin{Soutput}
-[1] -1195.931
+[1] -1196.493
 \end{Soutput}
 \end{Schunk}
 %
@@ -852,11 +853,11 @@ R> AIC(fit_tw, fit_dg, fit_dl, fit_dpg, fit_dpl) |>
 \end{Sinput}
 \begin{Soutput}
         df      AIC delta_AIC
-fit_dpl 19 11043.63   0.00000
-fit_dpg 19 11112.30  68.66264
-fit_dl  19 11133.52  89.89018
-fit_dg  19 11208.90 165.26222
-fit_tw  12 11356.57 312.93803
+fit_dpl 19 11042.10   0.00000
+fit_dpg 19 11110.56  68.45874
+fit_dl  19 11131.32  89.21822
+fit_dg  19 11207.94 165.83778
+fit_tw  12 11355.75 313.65031
 \end{Soutput}
 \end{Schunk}
 %
@@ -886,9 +887,9 @@ R> AIC(fit_dpl_ar1, fit_dpl, fit_dpl_iso)
 \end{Sinput}
 \begin{Soutput}
             df      AIC
-fit_dpl_ar1 21 11038.88
-fit_dpl     19 11043.63
-fit_dpl_iso 17 11069.41
+fit_dpl_ar1 21 11037.47
+fit_dpl     19 11042.10
+fit_dpl_iso 17 11069.27
 \end{Soutput}
 \end{Schunk}
 %
@@ -934,78 +935,78 @@ Family: binomial(link = 'log')
 slog_depth      0.20    0.67
 
 Smooth terms:
-               Std. Dev.
-sds(log_depth)      3.23
+                 Std. Dev.
+sd__s(log_depth)      3.18
 
 Time-varying parameters:
                  coef.est coef.se
-(Intercept)-2004     0.34    0.61
-(Intercept)-2005     0.39    0.65
-(Intercept)-2006     0.45    0.68
-(Intercept)-2007     0.35    0.61
-(Intercept)-2008     0.26    0.55
-(Intercept)-2009     0.25    0.54
-(Intercept)-2010     0.25    0.52
-(Intercept)-2011     0.08    0.47
-(Intercept)-2012    -0.09    0.49
-(Intercept)-2013    -0.10    0.47
-(Intercept)-2014    -0.10    0.45
-(Intercept)-2015    -0.05    0.43
-(Intercept)-2016     0.01    0.43
-(Intercept)-2017    -0.01    0.45
+(Intercept)-2004     0.31    0.62
+(Intercept)-2005     0.35    0.66
+(Intercept)-2006     0.40    0.70
+(Intercept)-2007     0.32    0.62
+(Intercept)-2008     0.24    0.55
+(Intercept)-2009     0.23    0.54
+(Intercept)-2010     0.22    0.53
+(Intercept)-2011     0.07    0.46
+(Intercept)-2012    -0.07    0.48
+(Intercept)-2013    -0.08    0.46
+(Intercept)-2014    -0.09    0.44
+(Intercept)-2015    -0.04    0.42
+(Intercept)-2016     0.00    0.42
+(Intercept)-2017    -0.02    0.44
 (Intercept)-2018    -0.04    0.44
-(Intercept)-2019    -0.15    0.47
-(Intercept)-2020    -0.26    0.53
-(Intercept)-2021    -0.38    0.60
-(Intercept)-2022    -0.30    0.53
+(Intercept)-2019    -0.14    0.47
+(Intercept)-2020    -0.24    0.53
+(Intercept)-2021    -0.34    0.62
+(Intercept)-2022    -0.27    0.55
+rho-(Intercept)      0.86    0.28
 
 Spatiotemporal AR1 correlation (rho): 0.74
-Matérn anisotropic range (spatial): 17.5 to 183.6 at 130 deg.
-Spatial SD: 0.82
+Matérn anisotropic range (spatial): 16.7 to 217.1 at 130 deg.
+Spatial SD: 0.89
 Spatiotemporal marginal AR1 SD: 1.34
 
 Delta/hurdle model 2: -----------------------------------
 Family: lognormal(link = 'log') 
-\end{Soutput}
-
-\begin{Soutput}
+Conditional model:
             coef.est coef.se
-(Intercept)     2.20    0.20
-slog_depth      0.11    0.24
+(Intercept)     2.21    0.20
+slog_depth      0.09    0.25
 
 Smooth terms:
-               Std. Dev.
-sds(log_depth)      0.59
+                 Std. Dev.
+sd__s(log_depth)      0.64
 
 Time-varying parameters:
                  coef.est coef.se
 (Intercept)-2004     0.43    0.27
-(Intercept)-2005     0.25    0.31
-(Intercept)-2006     0.13    0.24
-(Intercept)-2007     0.03    0.30
-(Intercept)-2008    -0.06    0.26
+(Intercept)-2005     0.26    0.31
+(Intercept)-2006     0.14    0.24
+(Intercept)-2007     0.04    0.30
+(Intercept)-2008    -0.05    0.26
 (Intercept)-2009     0.20    0.30
-(Intercept)-2010     0.50    0.26
-(Intercept)-2011     0.30    0.30
+(Intercept)-2010     0.50    0.27
+(Intercept)-2011     0.31    0.30
 (Intercept)-2012     0.18    0.23
 (Intercept)-2013     0.10    0.29
 (Intercept)-2014     0.04    0.23
 (Intercept)-2015    -0.10    0.29
 (Intercept)-2016    -0.26    0.23
 (Intercept)-2017    -0.24    0.30
-(Intercept)-2018    -0.27    0.23
-(Intercept)-2019    -0.26    0.35
-(Intercept)-2020    -0.30    0.35
-(Intercept)-2021    -0.41    0.24
+(Intercept)-2018    -0.28    0.24
+(Intercept)-2019    -0.27    0.35
+(Intercept)-2020    -0.31    0.35
+(Intercept)-2021    -0.42    0.24
 (Intercept)-2022    -0.20    0.25
+rho-(Intercept)      0.63    0.38
 
 Dispersion parameter: 1.10
-Spatiotemporal AR1 correlation (rho): 0.22
-Matérn anisotropic range (spatial): 4.1 to 43.3 at 130 deg.
-Spatial SD: 0.41
-Spatiotemporal marginal AR1 SD: 0.82
+Spatiotemporal AR1 correlation (rho): 0.24
+Matérn anisotropic range (spatial): 3.4 to 44.1 at 130 deg.
+Spatial SD: 0.43
+Spatiotemporal marginal AR1 SD: 0.90
 
-ML criterion at convergence: 5498.439
+ML criterion at convergence: 5497.734
 
 See ?tidy.sdmTMB to extract these values as a data frame.
 See ?plot_anisotropy to plot the anisotropic range.
@@ -1214,14 +1215,17 @@ Mesh: mesh_snow (isotropic covariance)
 Time column: year
 Data: snow
 Family: nbinom2(link = 'log')
- 
+
+Random intercepts and/or slopes:
+
+Conditional model:
+     Groups        Name    Variance    Std.Dev. 
+     year_f (Intercept)        0.09        0.30 
+
+Conditional model:
             coef.est coef.se
 (Intercept)    -3.23    5.44
 nao             0.36    0.22
-
-Random intercepts:
-       Std. Dev.
-year_f       0.3
 
 Dispersion parameter: 0.46
 Matérn range: 25.21
