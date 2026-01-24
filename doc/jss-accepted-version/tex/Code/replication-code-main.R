@@ -15,7 +15,7 @@ is_optimized <- function() {
 }
 (optimized_blas <- is_optimized())
 if (!optimized_blas) {
-  warning("Detected a non-optimized BLAS library. We recommend installing an optimized BLAS library for considerably faster fitting of TMB/sdmTMB models. There are additional details in the 'Installation' section of the sdmTMB README.md file. https://github.com/pbs-assess/sdmtmb?tab=readme-ov-file#installation")
+  warning("Detected a non-optimized BLAS library. We recommend installing an optimized BLAS library for considerably faster fitting of TMB/sdmTMB models. There are additional details in the 'Installation' section of the sdmTMB README.md file. https://github.com/sdmTMB/sdmTMB?tab=readme-ov-file#installation")
 }
 
 ## ----check-version, echo=FALSE, cache=FALSE, eval=TRUE--------------------
@@ -322,7 +322,7 @@ summary(fit)
 
 
 ## ----dog-residuals, fig.cap="Simulation-based randomized quantile residuals from the \\pkg{DHARMa} package. The statistical test is a two-sided Kolmogorov-Smirnov test of the null hypothesis that the residuals are drawn from a uniform(0, 1) distribution.", fig.asp=0.68, echo=TRUE, out.width="4in"----
-set.seed(42)
+set.seed(123)
 s <- simulate(fit, nsim = 500, type = "mle-mvn")
 dharma_residuals(s, fit)
 
@@ -496,6 +496,7 @@ if (!file.exists("ne_10m_lakes.shp")) {
     scale = 10, type = "lakes", category = "physical",
     "."
   )
+  sf::write_sf(lakes, "ne_10m_lakes.shp")
 }
 
 
@@ -579,7 +580,7 @@ snow_g2 <- ggplot(data = nao_effect_df) +
   scale_colour_viridis_c(
     limit = c(min(snow$nao_effect_lwr), max(snow$nao_effect_upr))
   ) +
-  ggtitle(paste0("(b) Lower 95% CI: ", round(min(snow$nao_effect_lwr), 2), " to ", round(max(snow$nao_effect_lwr), 2))) +
+  ggtitle(paste0("(b) Lower 95% CI: ", sprintf("%.2f", round(min(snow$nao_effect_lwr), 2)), " to ", sprintf("%.2f", round(max(snow$nao_effect_lwr), 2)))) +
   theme_bw() +
   th
 
