@@ -194,7 +194,7 @@ tidy(fit_bin_rf, effects = "ran_pars", conf.int = TRUE)
 
 
 ## ----morans, echo=TRUE----------------------------------------------------
-inv_dist_matrix <- 1 / as.matrix(dist(pcod[, c("X", "Y"), ]))
+inv_dist_matrix <- 1 / as.matrix(dist(pcod[, c("X", "Y")]))
 diag(inv_dist_matrix) <- 0
 set.seed(1)
 r_bin <- residuals(fit_bin, type = "mle-mvn")
