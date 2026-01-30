@@ -463,6 +463,8 @@ See \citet[][Chapters~2.6 and~2.7]{krainski2018} for guidance on mesh constructi
 We can visualize the mesh object with the associated plotting method (Figure~\ref{fig:dog-binomial-mesh2}).
 Our mesh has 563 (\code{mesh\_pcod2\$mesh\$n}) vertices.
 Mesh complexity has a large influence on the speed of fitting these models.
+Meshes generated with \pkg{fmesher} may differ slightly across CPU architectures and compiler settings due to platform-specific floating-point arithmetic, which can lead to minor differences in parameter estimates.
+Results shown here were produced with \proglang{R} 4.5.2 on Ubuntu 22.04.5 LTS (\code{x86\_64-pc-linux-gnu}).
 
 \vspace*{-0.3cm}
 
